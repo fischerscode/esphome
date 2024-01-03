@@ -35,45 +35,50 @@ class VirtualRGBCTLightOutput : public light::LightOutput {
     state->current_values_as_rgbct(&red, &green, &blue, &color_temperature, &white_brightness);
 
     if (white_brightness > 0 && this->convert_color_temp_) {
+      float temp_red, temp_green, temp_blue;
       float temp = 10000 / color_temperature;
 
       if (temp <= 66) {
-        red = 1;
+        temp_red = 1;
       } else {
-        red = 1.292936186062745 * pow(temp - 60, -0.1332047592);
-        if (red < 0) {
-          red = 0;
+        temp_red = 1.292936186062745 * pow(temp - 60, -0.1332047592);
+        if (temp_red < 0) {
+          temp_red = 0;
         }
-        if (red > 1) {
-          red = 1;
+        if (temp_red > 1) {
+          temp_red = 1;
         }
       }
 
       if (temp <= 66) {
-        green = 0.3900815787690196 * log(temp) - 0.6318414437886275;
+        temp_green = 0.3900815787690196 * log(temp) - 0.6318414437886275;
       } else {
-        green = 1.129890860895294 * pow(temp - 60, -0.0755148492);
+        temp_green = 1.129890860895294 * pow(temp - 60, -0.0755148492);
       }
-      if (green < 0) {
-        green = 0;
+      if (temp_green < 0) {
+        temp_green = 0;
       }
-      if (green > 1) {
-        green = 1;
+      if (temp_green > 1) {
+        temp_green = 1;
       }
 
       if (temp >= 66) {
-        blue = 1;
+        temp_blue = 1;
       } else if (temp <= 19) {
-        blue = 0;
+        temp_blue = 0;
       } else {
-        blue = 0.543206789110196 * log(temp - 10) - 1.19625408914;
-        if (blue < 0) {
-          blue = 0;
+        temp_blue = 0.543206789110196 * log(temp - 10) - 1.19625408914;
+        if (temp_blue < 0) {
+          temp_blue = 0;
         }
-        if (blue > 1) {
-          blue = 1;
+        if (temp_blue > 1) {
+          temp_blue = 1;
         }
       }
+
+      red = (red * (1 - white_brightness) + temp_red * white_brightness * white_brightness) / 2;
+      green = (red * (1 - white_brightness) + temp_green * white_brightness * white_brightness) / 2;
+      blue = (red * (1 - white_brightness) + temp_blue * white_brightness * white_brightness) / 2;
     }
 
     if (this->func_ != nullptr) {

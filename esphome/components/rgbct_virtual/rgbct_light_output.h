@@ -75,6 +75,10 @@ class VirtualRGBCTLightOutput : public light::LightOutput {
           blue = 1;
         }
       }
+
+      red = red * white_brightness;
+      green = green * white_brightness;
+      blue = blue * white_brightness;
     }
 
     if (this->func_ != nullptr) {

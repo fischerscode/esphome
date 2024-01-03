@@ -35,7 +35,8 @@ class VirtualRGBCTLightOutput : public light::LightOutput {
     state->current_values_as_rgbct(&red, &green, &blue, &color_temperature, &white_brightness);
 
     if (white_brightness > 0 && this->convert_color_temp_) {
-      float temp = 10000 / color_temperature;
+      float temp = 10000 / (this->warm_white_temperature_ +
+                            color_temperature * (this->cold_white_temperature_ - this->warm_white_temperature_));
 
       if (temp <= 66) {
         red = 1;

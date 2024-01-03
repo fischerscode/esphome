@@ -34,6 +34,8 @@ class VirtualRGBCTLightOutput : public light::LightOutput {
 
     state->current_values_as_rgbct(&red, &green, &blue, &color_temperature, &white_brightness);
 
+    ESP_LOGD("rgbct_virtual", "color_temperature: %f", color_temperature);
+
     if (white_brightness > 0 && this->convert_color_temp_) {
       float temp = 10000 / color_temperature;
 

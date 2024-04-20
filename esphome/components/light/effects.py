@@ -323,12 +323,16 @@ async def strobe_effect_to_code(config, effect_id):
     {
         cv.Optional(CONF_ALPHA, default=0.95): cv.percentage,
         cv.Optional(CONF_INTENSITY, default=0.015): cv.percentage,
+        cv.Optional(CONF_MIN_BRIGHTNESS, default=0): cv.percentage,
+        cv.Optional(CONF_MAX_BRIGHTNESS, default=1): cv.percentage,
     },
 )
 async def flicker_effect_to_code(config, effect_id):
     var = cg.new_Pvariable(effect_id, config[CONF_NAME])
     cg.add(var.set_alpha(config[CONF_ALPHA]))
     cg.add(var.set_intensity(config[CONF_INTENSITY]))
+    cg.add(var.set_min_brightness(config[CONF_MIN_BRIGHTNESS]))
+    cg.add(var.set_max_brightness(config[CONF_MAX_BRIGHTNESS]))
     return var
 
 

@@ -198,8 +198,8 @@ class FlickerLightEffect : public LightEffect {
     const float alpha = this->alpha_;
     const float beta = 1.0f - alpha;
     out.set_state(true);
-    out.set_brightness(remote.get_brightness() * beta + current.get_brightness() * alpha +
-                       (random_cubic_float() * this->intensity_));
+    out.set_brightness(std::max(min_brightness_, std::min(remote.get_brightness() * beta + current.get_brightness() * alpha +
+                       (random_cubic_float() * this->intensity_), max_brightness_)));
     out.set_red(remote.get_red() * beta + current.get_red() * alpha + (random_cubic_float() * this->intensity_));
     out.set_green(remote.get_green() * beta + current.get_green() * alpha + (random_cubic_float() * this->intensity_));
     out.set_blue(remote.get_blue() * beta + current.get_blue() * alpha + (random_cubic_float() * this->intensity_));
@@ -220,10 +220,14 @@ class FlickerLightEffect : public LightEffect {
 
   void set_alpha(float alpha) { this->alpha_ = alpha; }
   void set_intensity(float intensity) { this->intensity_ = intensity; }
+  void set_min_brightness(float min_brightness) { this->min_brightness_ = min_brightness; }
+  void set_max_brightness(float max_brightness) { this->max_brightness_ = max_brightness; }
 
  protected:
   float intensity_{};
   float alpha_{};
+  float min_brightness_{};
+  float max_brightness_{};
 };
 
 }  // namespace light
